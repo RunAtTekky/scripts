@@ -1,0 +1,10 @@
+#!/bin/bash
+
+file="$1"
+extension="${file##*.}"
+base_name="$(basename "$file" ".$extension")"
+
+output="$base_name.out"
+c++ "$file" -o "$output"
+"./$output"
+rm -f "./$output"

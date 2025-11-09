@@ -1,0 +1,28 @@
+#!/bin/bash
+
+tmpfile="/tmp/bg.log"
+bg="$HOME/.config/wallpaper-symlink"
+img="$1"
+if [ -z "$img" ]; then
+    echo "Image path not provided" >> "$tmpfile"
+    exit 1
+fi
+
+cp "$img" "$bg"
+rm "$HOME/.config/omarchy/current/background"
+ln -s "$bg" "$HOME/.config/omarchy/current/background"
+killall swaybg
+
+/usr/bin/setsid /usr/bin/swaybg --image "$img" -m fill > /dev/null 2>&1 &
+disown
+
+if [ $? -eq 0 ]; then
+    echo "Was able to set background" >> "$tmpfile"
+else
+    echo "Couldn't do it" >> "$tmpfile"
+fi
+
+datetime=$(date --rfc-3339 s)
+echo "$img has been set at $datetime" >> "$tmpfile"
+
+exit 0

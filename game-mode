@@ -1,0 +1,43 @@
+#!/bin/bash
+
+FILE="$1" 
+
+KB_VARIANT_N="kb_variant = dvorak,"
+KB_OPTIONS_N="kb_options = caps:swapescape,grp:alts_toggle"
+
+KB_VARIANT_G="kb_variant = ,dvorak"
+KB_OPTIONS_G="kb_options = grp:alts_toggle"
+
+
+comment() {
+    PATTERN="$1"
+
+    sed -i "s/$PATTERN/# $PATTERN/g" "$FILE"
+}
+
+uncomment() {
+    PATTERN="$1"
+    sed -i "s/# $PATTERN/$PATTERN/g" "$FILE"
+}
+
+MODE="# gaming_mode=false"
+# Normal mode
+if grep -qE "$MODE" "$FILE"; then
+    echo "Normal KB mode"
+    echo "Switching to Gaming KB mode"
+    comment "$KB_VARIANT_N"
+    comment "$KB_OPTIONS_N"
+    uncomment "$KB_VARIANT_G"
+    uncomment "$KB_OPTIONS_G"
+    sed -i "s/$MODE/# gaming_mode=true/g" "$FILE"
+else
+    echo "Gaming KB mode"
+    echo "Switching to Normal KB mode"
+    comment "$KB_VARIANT_G"
+    comment "$KB_OPTIONS_G"
+    uncomment "$KB_VARIANT_N"
+    uncomment "$KB_OPTIONS_N"
+    sed -i "s/# gaming_mode=true/# gaming_mode=false/g" "$FILE"
+fi
+
+echo "Done."
