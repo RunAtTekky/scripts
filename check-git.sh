@@ -2,13 +2,6 @@
 
 CURR_DIR=$(pwd)
 
-# Find all the zip files
-    # File by file
-    # Unzip the file to res folder
-    # Check if the file contains .git folder
-    # If yes, print the name of the file
-    # Delete the res folder
-
 TARGET_FOLDER=".git"
 DEST_FOLDER="res"
 
