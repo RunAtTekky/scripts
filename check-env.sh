@@ -3,31 +3,33 @@
 CURR_DIR=$(pwd)
 
 TARGET=".env"
-DEST_FOLDER="res"
 
 ALL_FILES=$(find . -name '*.zip')
 
 ZIP_CNT=$(find . -name '*.zip' | wc -l)
 echo "Total zip files $ZIP_CNT"
 
+UNZIP_LOCATION="/tmp/ml-unzipped"
+mkdir -p "$UNZIP_LOCATION"
 
 counter=0
-while read line
+while read file
 do
     cd "$CURR_DIR"
-    rm -rf "$DEST_FOLDER"
-    unzip "$line" -d "$DEST_FOLDER" &>/dev/null
+    file_name=$(basename "$file" ".zip")
+    DEST_FOLDER="$UNZIP_LOCATION/$file_name"
+    if [[ ! -d "$DEST_FOLDER" ]]; then
+        unzip "$file" -d "$DEST_FOLDER" &>/dev/null
+    fi
 
     cnt=$(find "$DEST_FOLDER" -name "$TARGET" | wc -l)
     if [[ $cnt -ne 0 ]]; then
-        echo "$line"
+        echo "$file"
         find "$DEST_FOLDER" -name "$TARGET" | xargs -I _ cat _
         echo -e "\n---\n"
         ((counter++))
         # echo "$counter"
     fi
-
-    rm -rf "$DEST_FOLDER"
     # echo "---"
 done <<< "$ALL_FILES"
 
