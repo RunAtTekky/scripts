@@ -60,3 +60,5 @@ else
     echo "Personal creds"
     toggle_to_work true
 fi
+
+cat "$file"
