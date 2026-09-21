@@ -1,26 +1,46 @@
 #!/bin/bash
 
-set -eou pipefail
+set -eoux pipefail
 
 # COLOUR CODES
 RED=$'\e[31m'
 GREEN=$'\e[32m'
 YELLOW=$'\e[33m'
 RESET=$'\e[0m'
+MAGENTA=$'\e[35m'
 
 LOG_LEVEL="DEBUG"
 
-# get_current_date_and_time() {
-#   date
-# }
+get_current_date_and_time() {
+  echo $(date +'%Y-%m-%d %H:%M:%S')
+}
 
 log_info() {
-  if [[ "$LOG_LEVEL" == "DEBUG" ]]; then
-    echo -e "${GREEN}[INFO] - $1${RESET}"
+  if [[ "$LOG_LEVEL" == "DEBUG" || "$LOG_LEVEL" == "INFO" ]]; then
+    echo -e "${GREEN}[INFO] $(get_current_date_and_time) - $1${RESET}"
   fi
 }
 
-log_info "Setting up our directory"
+log_debug() {
+  if [[ "$LOG_LEVEL" == "DEBUG" ]]; then
+    echo -e "${MAGENTA}[INFO] $(get_current_date_and_time) - $1${RESET}"
+  fi
+}
+
+log_warn() {
+  if [[ "$LOG_LEVEL" != "ERROR" ]]; then
+    echo -e "${YELLOW}[INFO] $(get_current_date_and_time) - $1${RESET}"
+  fi
+}
+
+log_error() {
+  echo -e "${RED}[INFO] $(get_current_date_and_time) - $1${RESET}"
+}
+
+log_info "Info"
+log_debug "Debug"
+log_error "Error"
+log_warn "Warn"
 
 # # These are the files which I will be using
 # BASE_DIR="/tmp/recommendation-test"
